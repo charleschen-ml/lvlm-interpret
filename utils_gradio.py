@@ -132,7 +132,16 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     print("[DEBUG] Special tokens:")
     print(processor.tokenizer.special_tokens_map)
 
-    img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
+    # This line doesn't work because image_token_index is not defined
+    # img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
+
+    # Try-except: set to 0 if image_token_index is not defined
+    try:
+        img_idx = torch.where(input_ids == model.config.image_token_index)[1][0].item()
+    except (AttributeError, IndexError, RuntimeError) as e:
+        print(f"[WARN] Could not find image token index: {e}. Falling back to img_idx = 0.")
+        img_idx = 0
+
     do_sample = True if temperature > 0.001 else False
     # Generate
     model.enc_attn_weights = []
