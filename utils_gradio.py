@@ -125,12 +125,12 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     inputs = processor(prompt, image, return_tensors="pt").to(model.device)
     input_ids = inputs.input_ids
 
-    print("charles debug:")
-    for k, v in model.config.to_dict().items():
-        print(f"{k}: {v}")
+    # print("charles debug:")
+    # for k, v in model.config.to_dict().items():
+    #     print(f"{k}: {v}")
 
-    print("[DEBUG] Special tokens:")
-    print(processor.tokenizer.special_tokens_map)
+    # print("[DEBUG] Special tokens:")
+    # print(processor.tokenizer.special_tokens_map)
 
     # This line doesn't work because image_token_index is not defined
     # img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
