@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 
 def get_processor_model(args):
     #outputs: attn_output, attn_weights, past_key_value
-    processor = AutoProcessor.from_pretrained(args.model_name_or_path)
+
+    # processor = AutoProcessor.from_pretrained(args.model_name_or_path)
+    processor = AutoProcessor.from_pretrained(path_to_converted_ckpt, trust_remote_code=True) # charles
 
     if args.load_4bit:
         quant_config = BitsAndBytesConfig(
@@ -36,12 +38,32 @@ def get_processor_model(args):
     else:
         quant_config = None
 
-    model = LlavaForConditionalGeneration.from_pretrained(
-        args.model_name_or_path, torch_dtype=torch.bfloat16, 
-        quantization_config=quant_config, low_cpu_mem_usage=True, device_map=args.device_map,
-        attn_implementation="eager", # charles
+    # model = LlavaForConditionalGeneration.from_pretrained(
+    #     args.model_name_or_path, torch_dtype=torch.bfloat16, 
+    #     quantization_config=quant_config, low_cpu_mem_usage=True, device_map=args.device_map,
+    #     attn_implementation="eager", # charles
+    # )
+
+    # charles
+    model = AutoModelForVision2Seq.from_pretrained(
+        path_to_converted_ckpt,
+        torch_dtype=torch.bfloat16,
+        low_cpu_mem_usage=True,
+        trust_remote_code=True,
+        load_in_8bit=True,
+        attn_implementation="eager", # slower, but required to get attention maps
     )
-    model.vision_tower.config.output_attentions = True
+    
+    # model.vision_tower.config.output_attentions = True
+
+    # Turn on attention
+    model.config.output_attentions = True # for the whole stack
+    if hasattr(model, "language_model"): # try language_model
+        model.language_model.config.output_attentions = True
+        print(f"model.language_model.config.output_attentions = {model.language_model.config.output_attentions}")
+    if hasattr(model, "model"): # try model
+        model.model.config.output_attentions = True
+        print(f"model.model.config.output_attentions = {model.model.config.output_attentions}")
 
     # Relevancy map
     # set hooks to get attention weights
