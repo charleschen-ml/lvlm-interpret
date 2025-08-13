@@ -231,6 +231,8 @@ def construct_relevancy_map(tokenizer, model, input_ids, tokens, outputs, output
 
         # Compute loss and backpropagate to get gradients on attention weights
         model.zero_grad()
+        print(f"token_logits.requires_grad: {token_logits.requires_grad}") # charles debug
+        print(f"token_logits.grad_fn: {token_logits.grad_fn}") # charles debug
         token_logits.backward(gradient=token_id_one_hot, retain_graph=True)
     
         # initialize relevancy map for llama
