@@ -7,6 +7,7 @@ import torch
 # from torchvision.transforms.functional import to_pil_image
 from transformers import LlavaForConditionalGeneration, AutoProcessor
 from transformers import BitsAndBytesConfig
+from transformers import AutoConfig, AutoImageProcessor, AutoModelForVision2Seq # charles
 
 func_to_enable_grad = '_sample'
 setattr(LlavaForConditionalGeneration, func_to_enable_grad, torch.enable_grad(getattr(LlavaForConditionalGeneration, func_to_enable_grad)))
