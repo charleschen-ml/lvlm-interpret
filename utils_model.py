@@ -22,7 +22,7 @@ def get_processor_model(args):
     #outputs: attn_output, attn_weights, past_key_value
 
     # processor = AutoProcessor.from_pretrained(args.model_name_or_path)
-    processor = AutoProcessor.from_pretrained(path_to_converted_ckpt, trust_remote_code=True) # charles
+    processor = AutoProcessor.from_pretrained(args.model_name_or_path, trust_remote_code=True) # charles
 
     if args.load_4bit:
         quant_config = BitsAndBytesConfig(
