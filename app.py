@@ -25,7 +25,10 @@ if __name__ == "__main__":
                         help="Whether to load the model in 8bit")
     parser.add_argument("--device_map", default="auto",
                         help="Device map to use for model", choices=["auto", "cpu", "cuda", "hpu"])
+    parser.add_argument("--log-level", type=str, default="INFO", help="Logging level (e.g., DEBUG, INFO, WARNING, ERROR)")
     args = parser.parse_args()
+
+    logging.basicConfig(level=getattr(logging, args.log_level.upper()))
 
     assert not( args.load_4bit and args.load_8bit), "Cannot load both 4bit and 8bit models"
 
