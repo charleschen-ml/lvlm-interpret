@@ -124,6 +124,11 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     
     inputs = processor(prompt, image, return_tensors="pt").to(model.device)
     input_ids = inputs.input_ids
+
+    print("charles debug:")
+    for k, v in model.config.to_dict().items():
+        print(f"{k}: {v}")
+
     img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
     do_sample = True if temperature > 0.001 else False
     # Generate
