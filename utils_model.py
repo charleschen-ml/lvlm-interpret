@@ -67,10 +67,10 @@ def get_processor_model(args):
         print(f"model.model.config.output_attentions = {model.model.config.output_attentions}")
 
     # Debug: Print the model structure
-    print("Model structure:")
-    print(model)
-    print("Model attributes:")
-    print(dir(model))
+    # print("Model structure:")
+    # print(model)
+    # print("Model attributes:")
+    # print(dir(model))
 
     # Relevancy map
     # set hooks to get attention weights
