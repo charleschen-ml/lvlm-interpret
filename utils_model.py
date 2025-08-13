@@ -47,7 +47,7 @@ def get_processor_model(args):
 
     # charles
     model = AutoModelForVision2Seq.from_pretrained(
-        path_to_converted_ckpt,
+        args.model_name_or_path,
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
         trust_remote_code=True,
