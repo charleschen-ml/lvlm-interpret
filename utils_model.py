@@ -51,7 +51,7 @@ def get_processor_model(args):
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
         trust_remote_code=True,
-        load_in_8bit=True,
+        # load_in_8bit=True,
         attn_implementation="eager", # slower, but required to get attention maps
     )
     
