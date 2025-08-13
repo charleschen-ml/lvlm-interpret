@@ -129,6 +129,9 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     for k, v in model.config.to_dict().items():
         print(f"{k}: {v}")
 
+    print("[DEBUG] Special tokens:")
+    print(processor.tokenizer.special_tokens_map)
+
     img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
     do_sample = True if temperature > 0.001 else False
     # Generate
