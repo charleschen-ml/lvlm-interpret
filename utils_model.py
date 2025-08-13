@@ -112,10 +112,15 @@ def get_processor_model(args):
         return output
 
     hooks_pre_encoder_vit = []
-    for layer in model.vision_tower.vision_model.encoder.layers:
-        hook_encoder_layer_vit = layer.self_attn.register_forward_hook(forward_hook_image_processor)
-        hooks_pre_encoder_vit.append(hook_encoder_layer_vit)
-    
+    # for layer in model.vision_tower.vision_model.encoder.layers:
+    #     hook_encoder_layer_vit = layer.self_attn.register_forward_hook(forward_hook_image_processor)
+    #     hooks_pre_encoder_vit.append(hook_encoder_layer_vit)
+
+    # Attach hook to each attention layer inside the vision transformer
+    for i, block in enumerate(model.vision_backbone.featurizer.blocks):
+        hook = block.attn.register_forward_hook(forward_hook_image_processor) # charles: register hook in attn layer to avoid irrelevant layers (e.g. norm, mlp)
+        hooks_pre_encoder_vit.append(hook)
+
     return processor, model
 
 def process_image(image, image_process_mode, return_pil=False, image_format='PNG', max_len=1344, min_len=672):
