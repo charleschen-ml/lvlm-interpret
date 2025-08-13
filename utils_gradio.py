@@ -125,6 +125,8 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     inputs = processor(prompt, image, return_tensors="pt").to(model.device)
     input_ids = inputs.input_ids
 
+    print(f"input_ids: \n{input_ids}")
+
     # print("charles debug:")
     # for k, v in model.config.to_dict().items():
     #     print(f"{k}: {v}")
