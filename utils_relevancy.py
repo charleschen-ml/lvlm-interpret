@@ -211,7 +211,40 @@ def construct_relevancy_map(tokenizer, model, input_ids, tokens, outputs, output
     logger.debug(f'Number of output scores: {len(outputs.scores)}')
     for target_index in tqdm(range(len(outputs.scores)), desc="Building relevancy maps"): #the last token is </s>
         clean_tokens.append(tokens[target_index])
-        token_logits = outputs.scores[target_index]
+
+        # token_logits = outputs.scores[target_index] # this line causes an error (requires_grad=False)
+        # use the following instead to enable gradient tracking
+        with torch.enable_grad():  # Enable gradient tracking
+
+            # Compute how many tokens we're including in the forward pass
+            slice_end = img_idx + target_index + 1
+
+            # Trim the input to include only up to the target token (inclusive)
+            input_ids_trimmed = input_ids[:, :slice_end]
+
+            # Debug: show token count before/after trimming
+            print(f"[DEBUG] Full input_ids shape: {input_ids.shape}")
+            print(f"[DEBUG] img_idx: {img_idx}, target_index: {target_index}, slice_end: {slice_end}")
+            print(f"[DEBUG] Trimmed input_ids shape: {input_ids_trimmed.shape}")
+
+            # Optional: print actual tokens (if you have tokenizer)
+            if tokenizer is not None:
+                print("[DEBUG] Trimmed input tokens:")
+                print(tokenizer.decode(input_ids_trimmed[0]))
+
+            # Move input to model device
+            input_ids_trimmed = input_ids_trimmed.to(model.device)
+
+            # Ensure model is in eval mode
+            model.eval()
+
+            # Enable grad on the input
+            input_ids_trimmed.requires_grad_(True)
+
+            # Forward pass to get logits for last token
+            output = model(input_ids=input_ids_trimmed)
+            token_logits = output.logits[0, -1, :]  # logits for target token
+
         token_id = torch.tensor(output_ids[target_index]).to(device)
 
         # print out the token and its predicted id
