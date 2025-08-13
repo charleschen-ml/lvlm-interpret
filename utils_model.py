@@ -66,6 +66,17 @@ def get_processor_model(args):
         model.model.config.output_attentions = True
         print(f"model.model.config.output_attentions = {model.model.config.output_attentions}")
 
+    # Debug: Print the model structure
+    print("Model structure:")
+    for name, module in model.named_modules():
+        print(f"{name}: {module}")
+
+    # Debug: Print the model's attributes
+    print("\nModel attributes:")
+    for attr in dir(model):
+        if not attr.startswith("_"):
+            print(attr)
+
     # Relevancy map
     # set hooks to get attention weights
     model.enc_attn_weights = []
