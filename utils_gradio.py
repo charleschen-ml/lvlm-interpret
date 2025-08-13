@@ -139,8 +139,8 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     try:
         img_idx = torch.where(input_ids == model.config.image_token_index)[1][0].item()
     except (AttributeError, IndexError, RuntimeError) as e:
-        print(f"[WARN] Could not find image token index: {e}. Falling back to img_idx = 0.")
-        img_idx = 0
+        print(f"[WARN] Falling back to img_idx = 0.")
+        img_idx = 1
 
     do_sample = True if temperature > 0.001 else False
     # Generate
