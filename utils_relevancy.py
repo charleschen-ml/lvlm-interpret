@@ -44,6 +44,7 @@ def handle_self_attention_image(R_i_i, enc_attn_weights, privious_cam=[]):
         device = None
     for i, blk in enumerate(enc_attn_weights):
         print(f"[DEBUG] blk type: {type(blk)}, requires_grad: {blk.requires_grad}, grad: {blk.grad}")
+        print("hello world")
         print("[DEBUG] grad identity match:",
             blk is model.enc_attn_weights[target_index])
         grad = blk.grad.float().detach()
