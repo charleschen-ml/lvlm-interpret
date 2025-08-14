@@ -144,6 +144,18 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     print(f"img_token_id: {img_token_id}")
     print(processor.tokenizer.special_tokens_map)
     print("Image token ID (decoded):", processor.tokenizer.decode([0]))
+
+    # print all tokens to a file
+    # import os
+    vocab = processor.tokenizer.get_vocab()
+    sorted_vocab = sorted(vocab.items(), key=lambda x: x[1])  # Sort by token ID
+    output_path = "/content/drive/MyDrive/Colab_Notebooks/lvlm/outputs/tokenizer_vocab.txt"
+    # os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        for token, idx in sorted_vocab:
+            f.write(f"{idx:5d} -> {token}\n")
+    print(f"Vocabulary saved to: {output_path}")
+
     try:
         img_idx = torch.where(input_ids == model.config.image_token_index)[1][0].item()
     except (AttributeError, IndexError, RuntimeError) as e:
