@@ -239,7 +239,7 @@ def construct_relevancy_map(tokenizer, model, input_ids, tokens, outputs, output
             model.eval()
 
             # Enable grad on the input
-            input_ids_trimmed.requires_grad_(True)
+            # input_ids_trimmed.requires_grad_(True)
 
             # Forward pass to get logits for last token
             output = model(input_ids=input_ids_trimmed)
