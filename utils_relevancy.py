@@ -46,7 +46,7 @@ def handle_self_attention_image(R_i_i, enc_attn_weights, privious_cam=[]):
         print(f"[DEBUG] blk type: {type(blk)}, requires_grad: {blk.requires_grad}, grad: {blk.grad}")
         print("hello world")
         print("[DEBUG] grad identity match:",
-            blk is enc_attn_weights[target_index])
+            blk is enc_attn_weights[i]) # probably not useful
         print("hello world 2")
         grad = blk.grad.float().detach()
         # if model.use_lrp: # not used
