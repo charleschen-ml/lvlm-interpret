@@ -140,8 +140,10 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     # img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
 
     # Try-except: set to 0 if image_token_index is not defined
-    img_token_id = processor.tokenizer.convert_tokens_to_ids("<s>")
-    print(f"img_token_id: \n{img_token_id}")
+    img_token_id = processor.tokenizer.convert_tokens_to_ids("<image>")
+    print(f"img_token_id: {img_token_id}")
+    print(processor.tokenizer.special_tokens_map)
+    print("Image token ID (decoded):", processor.tokenizer.decode([0]))
     try:
         img_idx = torch.where(input_ids == model.config.image_token_index)[1][0].item()
     except (AttributeError, IndexError, RuntimeError) as e:
