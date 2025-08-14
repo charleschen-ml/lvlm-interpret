@@ -266,7 +266,12 @@ def construct_relevancy_map(tokenizer, model, input_ids, tokens, outputs, output
         model.zero_grad()
         print(f"token_logits.requires_grad: {token_logits.requires_grad}") # charles debug
         print(f"token_logits.grad_fn: {token_logits.grad_fn}") # charles debug
-        token_logits.backward(gradient=token_id_one_hot, retain_graph=True)
+        # token_logits.backward(gradient=token_id_one_hot, retain_graph=True) # charles
+        # Match shape for backward() [1, vocab_size] -> [vocab_size]
+        token_logits.squeeze(0).backward(
+            gradient=token_id_one_hot.squeeze(0),
+            retain_graph=True
+        )
     
         # initialize relevancy map for llama
         R_i_i_init = torch.eye(enc_attn_weights[target_index][0].shape[-1], enc_attn_weights[target_index][0].shape[-1]).to(token_logits.device).float()
