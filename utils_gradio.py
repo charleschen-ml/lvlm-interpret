@@ -115,19 +115,34 @@ def add_text(state, text, image, image_process_mode):
 
     return (state, to_gradio_chatbot(state), "", None)
 
+# charles added
+def get_openvla_prompt(instruction: str) -> str:
+    return f"{SYSTEM_PROMPT} USER: What action should the robot take to {instruction.lower()}? ASSISTANT: TASK:"
 
 @spaces.GPU
 def lvlm_bot(state, temperature, top_p, max_new_tokens):   
-    prompt = state.prompt
-    prompt_len = state.prompt_len
+    # temporarily disable
+    # prompt = state.prompt
+    # prompt_len = state.prompt_len
+    # image = state.image
+
+    # debug
+    SYSTEM_PROMPT = (
+        "A chat between a curious user and an artificial intelligence assistant. "
+        "The assistant gives helpful, detailed, and polite answers to the user's questions."
+    )
+    INSTRUCTION = "place the watermelon on the towel"
+    prompt = get_openvla_prompt(INSTRUCTION)
+    print(prompt.replace(". ", ".\n"))
+    prompt_len = len(prompt)
     image = state.image
 
     # debug
-    print("Image argument type:", type(image))
-    if image is not None:
-        print("Image size:", getattr(image, "size", None))
-    else:
-        print("Image is None!")
+    # print("Image argument type:", type(image))
+    # if image is not None:
+    #     print("Image size:", getattr(image, "size", None))
+    # else:
+    #     print("Image is None!")
 
     inputs = processor(prompt, image, return_tensors="pt").to(model.device)
     input_ids = inputs.input_ids
@@ -207,7 +222,7 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     # input_text_tokenized[img_idx] = "average_image" # definitely remove
     
     # debug: print outputs
-    print(f"\noutputs: \n{outputs}")
+    # print(f"\noutputs: \n{outputs}")
 
     output_ids = outputs.sequences.reshape(-1)[input_ids.shape[-1]:].tolist()  
 
