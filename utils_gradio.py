@@ -151,27 +151,29 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     # img_idx = torch.where(input_ids==model.config.image_token_index)[1][0].item()
 
     # Try-except: set to 0 if image_token_index is not defined
-    img_token_id = processor.tokenizer.convert_tokens_to_ids("<image>")
-    print(f"img_token_id: {img_token_id}")
-    print(processor.tokenizer.special_tokens_map)
-    print("Image token ID (decoded):", processor.tokenizer.decode([0]))
 
-    # print all tokens to a file
+    # debug: check if <image> token exists
+    # img_token_id = processor.tokenizer.convert_tokens_to_ids("<image>")
+    # print(f"img_token_id: {img_token_id}")
+    # print(processor.tokenizer.special_tokens_map)
+    # print("Image token ID (decoded):", processor.tokenizer.decode([0]))
+
+    # debug: print all tokens to a file
     # import os
-    vocab = processor.tokenizer.get_vocab()
-    sorted_vocab = sorted(vocab.items(), key=lambda x: x[1])  # Sort by token ID
-    output_path = "/content/drive/MyDrive/Colab_Notebooks/lvlm/outputs/tokenizer_vocab.txt"
-    # os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
-        for token, idx in sorted_vocab:
-            f.write(f"{idx:5d} -> {token}\n")
-    print(f"Vocabulary saved to: {output_path}")
+    # vocab = processor.tokenizer.get_vocab()
+    # sorted_vocab = sorted(vocab.items(), key=lambda x: x[1])  # Sort by token ID
+    # output_path = "/content/drive/MyDrive/Colab_Notebooks/lvlm/outputs/tokenizer_vocab.txt"
+    # # os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # with open(output_path, "w", encoding="utf-8") as f:
+    #     for token, idx in sorted_vocab:
+    #         f.write(f"{idx:5d} -> {token}\n")
+    # print(f"Vocabulary saved to: {output_path}")
 
     try:
         img_idx = torch.where(input_ids == model.config.image_token_index)[1][0].item()
     except (AttributeError, IndexError, RuntimeError) as e:
-        print(f"[WARN] Falling back to img_idx = 0.")
-        img_idx = 1
+        print(f"[WARN] Falling back to img_idx = None.")
+        img_idx = None
 
     do_sample = True if temperature > 0.001 else False
     # Generate
@@ -197,12 +199,12 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
         )
 
     input_ids_list = input_ids.reshape(-1).tolist()
-    input_ids_list[img_idx] = 0
+    # input_ids_list[img_idx] = 0 # definitely remove
     input_text = processor.tokenizer.decode(input_ids_list) # eg. "<s> You are a helpful ..."
     if input_text.startswith("<s> "):
         input_text = '<s>' + input_text[4:] # Remove the first space after <s> to maintain correct length
     input_text_tokenized = processor.tokenizer.tokenize(input_text) # eg. ['<s>', '▁You', '▁are', '▁a', '▁helpful', ... ]
-    input_text_tokenized[img_idx] = "average_image"
+    # input_text_tokenized[img_idx] = "average_image" # definitely remove
     
     output_ids = outputs.sequences.reshape(-1)[input_ids.shape[-1]:].tolist()  
 
