@@ -136,6 +136,10 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     print(prompt.replace(". ", ".\n"))
     prompt_len = len(prompt)
     image = state.image
+    # Load image from Github
+    # url = 'https://raw.githubusercontent.com/MichalZawalski/embodied-CoT/main/test_obs.png'
+    # page = requests.get(url)
+    # image = Image.open(BytesIO(page.content))
 
     # debug
     # print("Image argument type:", type(image))
