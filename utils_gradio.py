@@ -151,9 +151,9 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     input_ids_decoded = processor.tokenizer.decode(input_ids[0], skip_special_tokens=False)
     print(f"input_ids: \n{input_ids}")
     print(f"input_ids_decoded: \n{input_ids_decoded}")
-    print("Keys in inputs:", inputs.keys())
-    inputs_pixel_values = inputs.pixel_values
-    print(f"inputs_pixel_values: \n{inputs_pixel_values}")
+    # print("Keys in inputs:", inputs.keys())
+    # inputs_pixel_values = inputs.pixel_values
+    # print(f"inputs_pixel_values: \n{inputs_pixel_values}")
 
     # print("charles debug:")
     # for k, v in model.config.to_dict().items():
@@ -200,18 +200,32 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     else:
         eos_token_id = processor.tokenizer.eos_token_id
 
-    outputs = model.generate(
-            **inputs, 
-            do_sample=do_sample,
-            temperature=temperature,
-            top_p=top_p,
-            max_new_tokens=max_new_tokens,
-            use_cache=True,
-            output_attentions=True,
-            return_dict_in_generate=True,
-            output_scores=True,
-            eos_token_id=eos_token_id
-        )
+    # original generate()
+    # outputs = model.generate(
+    #         **inputs, 
+    #         do_sample=do_sample,
+    #         temperature=temperature,
+    #         top_p=top_p,
+    #         max_new_tokens=max_new_tokens,
+    #         use_cache=True,
+    #         output_attentions=True,
+    #         return_dict_in_generate=True,
+    #         output_scores=True,
+    #         eos_token_id=eos_token_id
+    #     )
+
+    # charles generate()
+    outputs = vla.generate(
+                **inputs, 
+                do_sample=False,
+                # top_p=top_p,
+                max_new_tokens=1024,
+                use_cache=True,
+                output_attentions=True,
+                return_dict_in_generate=True,
+                output_scores=True,
+                # eos_token_id=eos_token_id
+            )
 
     input_ids_list = input_ids.reshape(-1).tolist()
     # input_ids_list[img_idx] = 0 # definitely remove
