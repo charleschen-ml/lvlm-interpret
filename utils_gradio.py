@@ -206,6 +206,9 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     input_text_tokenized = processor.tokenizer.tokenize(input_text) # eg. ['<s>', '▁You', '▁are', '▁a', '▁helpful', ... ]
     # input_text_tokenized[img_idx] = "average_image" # definitely remove
     
+    # debug: print outputs
+    print(f"\noutputs: \n{outputs}")
+
     output_ids = outputs.sequences.reshape(-1)[input_ids.shape[-1]:].tolist()  
 
     generated_text = processor.tokenizer.decode(output_ids)
