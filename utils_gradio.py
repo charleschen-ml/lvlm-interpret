@@ -215,7 +215,7 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     #     )
 
     # charles generate()
-    outputs = vla.generate(
+    outputs = model.generate(
                 **inputs, 
                 do_sample=False,
                 # top_p=top_p,
