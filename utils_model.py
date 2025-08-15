@@ -24,6 +24,8 @@ def get_processor_model(args):
 
     # processor = AutoProcessor.from_pretrained(args.model_name_or_path)
     processor = AutoProcessor.from_pretrained(args.model_name_or_path, trust_remote_code=True) # charles
+    print(processor.__class__) # debug
+    print(processor.__call__.__doc__) # debug
 
     if args.load_4bit:
         quant_config = BitsAndBytesConfig(
