@@ -121,7 +121,14 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     prompt = state.prompt
     prompt_len = state.prompt_len
     image = state.image
-    
+
+    # debug
+    print("Image argument type:", type(image))
+    if image is not None:
+        print("Image size:", getattr(image, "size", None))
+    else:
+        print("Image is None!")
+
     inputs = processor(prompt, image, return_tensors="pt").to(model.device)
     input_ids = inputs.input_ids
 
