@@ -199,6 +199,10 @@ def lvlm_bot(state, temperature, top_p, max_new_tokens):
     output_ids_decoded = [processor.tokenizer.decode(oid).strip() for oid in output_ids] # eg. ['The', 'man', "'", 's', 'sh', 'irt', 'is', 'yellow', '.', '</s>']
     generated_text_tokenized = processor.tokenizer.tokenize(generated_text)
 
+    print(f"Generated response: \n{generated_text}")
+    print(f"output_ids_decoded: \n{output_ids_decoded}")
+    print(f"generated_text_tokenized: \n{generated_text_tokenized}")
+
     logger.info(f"Generated response: {generated_text}")
     logger.debug(f"output_ids_decoded: {output_ids_decoded}")
     logger.debug(f"generated_text_tokenized: {generated_text_tokenized}")
